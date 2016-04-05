@@ -48,7 +48,7 @@ int temperature;
 
 int minute;
 int hour;
-
+int correct =3 ;
 Time t;
 
 /*
@@ -210,7 +210,7 @@ void displayCycle() {
     showTime = !showTime;
     if (!showTime) {
       int chk = DHT11.read(dht11Pin);
-      temperature = (int)DHT11.temperature;
+      temperature = (int)DHT11.temperature - correct ;
       Serial.println(temperature);
     } else {
       hour = t.hour;
