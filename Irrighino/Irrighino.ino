@@ -1,73 +1,50 @@
 //Sketch per il controllo di un'elettrovalvola
 //per irrigazione ......Emanuele Principi 2016
 
-#include <DS1302.h>
-
+#include <Wire.h>
+#include "RTClib.h"
+RTC_DS1307 rtc;
 //Inizializzazione variabili e costanti
-int ora = 17; //Inserire ora di accensione in formato 24H
-int minuti = 52; //Inserire minuto di accensione
+int ora = 8;     //Inserire ora di accensione in formato 24H
+int minuti = 34; //Inserire minuto di accensione
 //
 int nora = 0 ;
 int nminuti = 0;
 int durata = 0;
 int somma = 0;
-int ContatorePulsantePremuto = 0;                   
-int StatoPulsante = 0;                              
-int StatoPulsantePrecedente = 0; 
+int ContatorePulsantePremuto = 0;
+int StatoPulsante = 0;
+int StatoPulsantePrecedente = 0;
+int umidita = 350;
+int h = 0;
+int m = 0;
 
-#define BUTTON 8                                    
-#define LED1 9                                    
-#define LED2 10                                     
-#define LED3 11                                      
+
+#define BUTTON 8
+#define LED1 9
+#define LED2 10
+#define LED3 11
 #define LED4 12
 #define relay1 2
 
 
-//Creazione oggetti RTC
-DS1302 rtc(5, 6, 7);
-#define DS1302_GND_PIN 3
-#define DS1302_VCC_PIN 4
-Time t;
-//Fine Creazione oggetti RTC
 
 void setup() {
-
-  // Serial.begin(115200);
+  //  Serial.begin(115200);
+  Wire.begin();
   // Activate RTC module
-  digitalWrite(DS1302_GND_PIN, LOW);
-  pinMode(DS1302_GND_PIN, OUTPUT);
-  digitalWrite(DS1302_VCC_PIN, HIGH);
-  pinMode(DS1302_VCC_PIN, OUTPUT);
-  rtc.halt(false);
-
+  rtc.begin();
   pinMode(relay1, OUTPUT);
-  // pinMode(ledPin, OUTPUT);
-  pinMode(BUTTON, INPUT);                           // imposta il pin digitale come input
-  pinMode(LED1, OUTPUT);                            // imposta il pin digitale come output
-  pinMode(LED2, OUTPUT);                            // imposta il pin digitale come output
-  pinMode(LED3, OUTPUT);                            // imposta il pin digitale come output
+  pinMode(BUTTON, INPUT);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
   pinMode(LED4, OUTPUT);                            // imposta il pin digitale come output
-
-
-  // tmElements_t tm;
-  // tm.Hour = 22;
-  // tm.Minute = 39;
-  // tm.Second = 00;
-  // tm.Day = 17;
-  // tm.Month = 02;
-  // tm.Year = 2016 -1970;
-  //tmElements_t.Year is the offset from 1970
-  //  RTC.write(tm);
-  //delay ( 2000 );
-  // Setup time library
-
 }
 
 void loop() {
   somma = minuti + durata;
-  
-  t = rtc.getTime(); //Legge l'ora dall' RTC
-  
+
   //Calcolo minuti
   if (somma >= 60) {
     nora = (ora + 1);
@@ -75,8 +52,6 @@ void loop() {
   } else nminuti = somma;
   nora = ora;
   //Fine Calcolo minuti
-
-
 
   StatoPulsante = digitalRead(BUTTON);              // legge il valore dell'input e lo conserva
 
@@ -87,51 +62,32 @@ void loop() {
 
       switch (ContatorePulsantePremuto) {
         case 1:  // controlla se il pulsante è stato premuto una volta
-          Serial.println("on");                                // stampa sulla console "on"
-          Serial.print("numero di volte tasto premuto:  ");    // stampa sulla console "numero di volte tasto premuto:"
-          Serial.println(ContatorePulsantePremuto, DEC);       // stampa il numero di volte che il pulsante è stato premuto
           digitalWrite(LED1, HIGH);                            // accende il LED1
           durata = 10;
-          Serial.println("off");                               // stampa sulla console "off"
           break;
         case 2:  // controlla se il pulsante è stato premuto due volte
-          Serial.println("on");                                // stampa sulla console "on"
-          Serial.print("numero di volte tasto premuto:  ");    // stampa sulla console "numero di volte tasto premuto:"
-          Serial.println(ContatorePulsantePremuto, DEC);       // stampa il numero di volte che il pulsante è stato premuto
           digitalWrite(LED1, LOW);                             // spegne il LED1
           digitalWrite(LED2, HIGH);                            // accende il LED2
           durata = 20;
-          Serial.println("off");                               // stampa sulla console "off"
           break;
         case 3:  // controlla se il pulsante è stato premuto tre volte
-          Serial.println("on");                                // stampa sulla console "on"
-          Serial.print("numero di volte tasto premuto:  ");    // stampa sulla console "numero di volte tasto premuto:"
-          Serial.println(ContatorePulsantePremuto, DEC);       // stampa il numero di volte che il pulsante è stato premuto
           digitalWrite(LED2, LOW);                             // spegne il LED2
           digitalWrite(LED3, HIGH);                            // accende il LED3
           durata = 30;
-          Serial.println("off");                               // stampa sulla console "off"
           break;
         case 4:  // controlla se il pulsante è stato premuto quattro volte
-          Serial.println("on");                                // stampa sulla console "on"
-          Serial.print("numero di volte tasto premuto:  ");    // stampa sulla console "numero di volte tasto premuto:"
-          Serial.println(ContatorePulsantePremuto, DEC);       // stampa il numero di volte che il pulsante è stato premuto
           digitalWrite(LED3, LOW);                             // accende il LED3
           digitalWrite(LED4, HIGH);                            // accende il LED4
           durata = 40;
-          Serial.println("off");                               // stampa sulla console "off"
           break;
         case 5:  // controlla se il pulsante è stato premuto cinque volte
-          Serial.println("on");                                // stampa sulla console "on"
-          Serial.print("numero di volte tasto premuto:  ");    // stampa sulla console "numero di volte tasto premuto:"
-          Serial.println(ContatorePulsantePremuto, DEC);       // stampa il numero di volte che il pulsante è stato premuto
           digitalWrite(LED1, HIGH);                             // accende il LED3
           digitalWrite(LED2, HIGH);                            // accende il LED4
           digitalWrite(LED3, HIGH);
           digitalWrite(LED4, HIGH);
           digitalWrite(relay1, HIGH);
+          verifico ();
           durata = 0;
-          Serial.println("off");                               // stampa sulla console "off"
           break;
       }
     }
@@ -146,7 +102,6 @@ void loop() {
   // si riavvia il ciclo
 
   if (ContatorePulsantePremuto > 5) {
-    Serial.println("fine ciclo");                            // stampa sulla console "fine ciclo"
     digitalWrite(LED4, LOW);                                 // spegne il LED4
     for (int x = 0; x < 5; x++) {                            // ciclo di accensione e spegnimento led
       for (int n = 9; n < 13; n++) {                        // ciclo sui diodi da accendere e spegnere
@@ -162,21 +117,34 @@ void loop() {
     ContatorePulsantePremuto = 0;
     StatoPulsante = 0;
     StatoPulsantePrecedente = 0;
-    Serial.println("mi riavvio");                            // stampa sulla console "mi riavvio"
   }
   inizia();
   tempo();
-  Serial.println(durata);
 }
 
 void inizia () {
-  if ((t.hour == ora) && (t.min == minuti)) {
+  DateTime now = rtc.now();
+  int h = now.hour();
+  int m = now.minute();
+  Serial.println(h);
+  Serial.println(m);
+  if ((h == ora) && (m == minuti)) {
     digitalWrite(relay1, HIGH);
+    verifico ();
   }
 }
 void tempo () {
-  if ((t.hour == nora) && (t.min == nminuti)) {
+  DateTime now = rtc.now();
+  int h = now.hour();
+  int m = now.minute();
+  if ((h == nora) && (m == nminuti)) {
     digitalWrite(relay1, LOW);
   }
+}
+void verifico () {
+  int sensorValue = analogRead(A0);
+  if (sensorValue >= umidita) {
+    digitalWrite(relay1, HIGH);
+  } else digitalWrite(relay1, LOW);
 }
 
