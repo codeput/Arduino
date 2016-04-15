@@ -29,7 +29,7 @@ long interval = 60000;
 #define LED2 10
 #define LED3 11
 #define LED4 12
-#define relay1 2
+#define relay1 3
 
 void setup() {
   //  Serial.begin(115200);
