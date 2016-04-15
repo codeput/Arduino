@@ -4,10 +4,13 @@
 #include <Wire.h>
 #include "RTClib.h"
 RTC_DS1307 rtc;
-//Inizializzazione variabili e costanti
+//Inserimento Orario Partenza
 int ora = 8;     //Inserire ora di accensione in formato 24H
 int minuti = 34; //Inserire minuto di accensione
-//
+//Fine Inserimento
+//Definizione di livello umidità
+int umidita = 350;
+//Fine Definizione
 int nora = 0 ;
 int nminuti = 0;
 int durata = 0;
@@ -15,19 +18,14 @@ int somma = 0;
 int ContatorePulsantePremuto = 0;
 int StatoPulsante = 0;
 int StatoPulsantePrecedente = 0;
-int umidita = 350;
 int h = 0;
 int m = 0;
-
-
 #define BUTTON 8
 #define LED1 9
 #define LED2 10
 #define LED3 11
 #define LED4 12
 #define relay1 2
-
-
 
 void setup() {
   //  Serial.begin(115200);
@@ -44,7 +42,6 @@ void setup() {
 
 void loop() {
   somma = minuti + durata;
-
   //Conversione minuti in ore
   if (somma >= 60) {
     nora = (ora + 1);
@@ -54,12 +51,10 @@ void loop() {
   //Fine Conversione
 
   StatoPulsante = digitalRead(BUTTON);              // legge il valore dell'input e lo conserva
-
   if (StatoPulsante != StatoPulsantePrecedente) {   // compara lo stato del pulsante attuale con il precedente
     if (StatoPulsante == HIGH) {                    // se lo stato è cambiato incrementa il contatore
       // se lo stato corrente è alto, il pulsante è passato da off a on
       ContatorePulsantePremuto++;
-
       switch (ContatorePulsantePremuto) {
         case 1:  // controlla se il pulsante è stato premuto una volta
           digitalWrite(LED1, HIGH);                            // accende il LED1
@@ -92,15 +87,12 @@ void loop() {
       }
     }
   }
-
   // salva lo stato corrente nella variabile che indica lo stato precedente per il loop successivo
   StatoPulsantePrecedente = StatoPulsante;
-
   // controlla se il pulsante è stato premuto quattro volte se vero indica che è finito il ciclo
   // il led lampeggia 2 volte per 50 millisecondi
   // vengono inizializzate nuovamente le variabili
   // si riavvia il ciclo
-
   if (ContatorePulsantePremuto > 5) {
     digitalWrite(LED4, LOW);                                 // spegne il LED4
     for (int x = 0; x < 5; x++) {                            // ciclo di accensione e spegnimento led
