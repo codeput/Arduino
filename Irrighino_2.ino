@@ -121,10 +121,10 @@ void loop() {
     
     if (value == 4586956) {
       Serial.print("Accensione");
-      digitalWrite(8, HIGH);
+      digitalWrite(relay1, HIGH);
       manuale();
 
-    } else {digitalWrite(8, LOW);
+    } else { digitalWrite(relay1, LOW);
       
     }
     mySwitch.resetAvailable();
