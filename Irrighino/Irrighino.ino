@@ -45,13 +45,13 @@ void setup() {
 void loop() {
   somma = minuti + durata;
 
-  //Calcolo minuti
+  //Conversione minuti in ore
   if (somma >= 60) {
     nora = (ora + 1);
     nminuti = (somma - 60);
   } else nminuti = somma;
   nora = ora;
-  //Fine Calcolo minuti
+  //Fine Conversione
 
   StatoPulsante = digitalRead(BUTTON);              // legge il valore dell'input e lo conserva
 
@@ -143,7 +143,7 @@ void tempo () {
 }
 void verifico () {
   int sensorValue = analogRead(A0);
-  if (sensorValue >= umidita) {
+  if (sensorValue <= umidita) {
     digitalWrite(relay1, HIGH);
   } else digitalWrite(relay1, LOW);
 }
