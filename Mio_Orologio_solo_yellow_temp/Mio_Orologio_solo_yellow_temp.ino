@@ -39,14 +39,14 @@ void setting () {
       delay(800);
     }
     if (hora > 23) {
-      ora = 0;
+      hora = 0;
     }
     if (digitalRead(9) == LOW) {
-      miuto = minuto++;
+      minuto = minuto++;
       delay(800);
     }
     if (minuto > 59) {
-      ora = 0;
+      minuto = 0;
     }
     RTC.adjust(DateTime(anno, mese, giorno, hora, minuto, secondo)); // Scrivve il nuovo orario nell' RTC
     sprintf(buffer,  "%02d%02d", hora, minuto);
@@ -93,4 +93,3 @@ void displaytime () {
     delay(500);
   }
 }
-
