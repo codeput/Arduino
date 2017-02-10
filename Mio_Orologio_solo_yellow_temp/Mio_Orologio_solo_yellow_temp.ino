@@ -35,20 +35,20 @@ void setting () {
   anno = now.year();
   while (tasto == false) {
     if (digitalRead(8) == LOW) {
-      hora = hora++;
+      hora = hora + 1 ;
       delay(800);
     }
     if (hora > 23) {
       hora = 0;
     }
     if (digitalRead(9) == LOW) {
-      minuto = minuto++;
+      minuto = minuto + 1 ;
       delay(800);
     }
     if (minuto > 59) {
       minuto = 0;
     }
-    RTC.adjust(DateTime(anno, mese, giorno, hora, minuto, secondo)); // Scrivve il nuovo orario nell' RTC
+    RTC.adjust(DateTime(anno, mese, giorno, hora, minuto, secondo)); // Scrive il nuovo orario nell' RTC
     sprintf(buffer,  "%02d%02d", hora, minuto);
     dsp7s04b.println(buffer);
     if (digitalRead(7) == HIGH) {
