@@ -1,7 +1,7 @@
 #include <Adafruit_TFTLCD.h> //Library
 #include <DS1307RTC.h>
-#include <Adafruit_GFX.h>
-#include <Fonts/FreeSerifItalic9pt7b.h>
+#include <Adafruit_GFX_AS.h>
+#include <font/FreeSans9pt7b.h>
 #define LCD_CS A3
 #define LCD_CD A2
 #define LCD_WR A1
@@ -159,10 +159,10 @@ void loop() {
   tft.print(d);
   tft.println('M');
 
-  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+
   tft.setTextSize(2);
-  tft.setFont(&FreeSerifItalic9pt7b);
   tft.setCursor(8, 280);
+  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
   tft.print("DATE :");
   tft.setCursor(100, 280);
   if (tm.Day < 10) {
@@ -194,20 +194,17 @@ void loop() {
     tft.print("0");
   }
   tft.print((tm.Second));
-
-
-  tft.setCursor(0, 310);
+  tft.setFont(&FreeSans9pt7b);
+  tft.setCursor(0, 315);
   tft.setTextSize(1);
   tft.setTextColor(TFT_RED);
   tft.print("Emanuele Principi 2017");
-
+  tft.setFont();
   tft.setCursor(92, 55);
   tft.setTextSize(2);
   tft.setTextColor(TFT_GREEN);
   tft.print("ROLEX");
   tft.setTextColor(TFT_WHITE);
-
 }
-
 
 
